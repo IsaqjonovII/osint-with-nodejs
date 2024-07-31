@@ -7,7 +7,9 @@ const cors = require("@fastify/cors");
 require("dotenv").config();
 
 //! Importing routes
+const routes = require("./routes");
 
+//! Connected
 fastify.get("/", (_, reply) => {
   reply.send("this is an osint tool built with nodejs dude!!!");
 });
@@ -18,9 +20,11 @@ mongoose
   .then(() => console.log("Connected to DB"))
   .catch((error) => console.error(`This happened: ${error}`));
 
-//! Starting server
+//! Registring
 fastify.register(cors);
+fastify.register(routes, { prefix: "/api/v1/" });
 
+//! Starting server
 (() => {
   try {
     //
