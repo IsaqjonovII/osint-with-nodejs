@@ -4,9 +4,9 @@ const { handleError } = require("../utils");
 
 async function uploadData(req, reply) {
   try {
-    const { data } = req.body;
-    const newUser = new User(data);
-    await newUser.save();
+    const data = req.body;
+    const users = data.map((user) => new User(user));
+    await User.insertMany(users);
 
     return reply.status(201).send({
       message: "User created and stored",
@@ -30,11 +30,12 @@ async function search(req, reply) {
 
     if (!results.length) {
       return reply.status(200).send({
-        message: "We couldn't find anything about this",
+        message: "Biz hech qanday malumot topa olmadik",
+        results,
       });
+    } else {
+      return reply.send({ results });
     }
-
-    return reply.send({ results });
   } catch (error) {
     handleError(error, reply);
   }
